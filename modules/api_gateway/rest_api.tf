@@ -23,7 +23,6 @@ resource "aws_api_gateway_integration" "rest_api_get_method_integration" {
   type                    = "AWS_PROXY"
   uri                     = var.lambda_function_arn
 }
-
 //  Creating a lambda resource based policy to allow API gateway to invoke the lambda function:
 resource "aws_lambda_permission" "api_gateway_lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
@@ -48,4 +47,3 @@ resource "aws_api_gateway_stage" "rest_api_stage" {
   rest_api_id   = aws_api_gateway_rest_api.rest_api.id
   stage_name    = var.rest_api_stage_name
 }
-

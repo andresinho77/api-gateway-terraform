@@ -4,8 +4,6 @@ data "archive_file" "lambda_code" {
   source_dir  = "${path.module}/function_code"
   output_path = "${path.module}/function_code.zip"
 }
-
-
 resource "aws_s3_bucket" "lambda_bucket" {
   bucket = var.s3_bucket_name
 }
@@ -23,14 +21,12 @@ resource "aws_s3_object" "lambda_code" {
   etag   = filemd5(data.archive_file.lambda_code.output_path)
 }
 
-
-
 resource "aws_lambda_function" "lambda_function" {
   function_name    = var.lambda_function_name
   s3_bucket        = aws_s3_bucket.lambda_bucket.id
   s3_key           = aws_s3_object.lambda_code.key
-  runtime          = "nodejs14.x"
-  handler          = "index.handler"
+  runtime          = var.runtime
+  handler          = var.handler
   source_code_hash = data.archive_file.lambda_code.output_base64sha256
   role             = aws_iam_role.lambda_execution_role.arn
 }
